@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vue Directives Example</title>
+  <script src="../js/vue.js"></script>
+</head>
+<body>
+    <div id="app">
+        <img v-bind:src="imgSrc" @click="handleImageChange">
+        <br/>
+        <input type="text" v-model="message"><button @click="showMessage">Click</button><button @click="clearMessage">clear</button>
+        <br/>
+        <div>{{ message }}</div>
+    </div>
+
+    <script>
+        new Vue({
+            el:"#app",
+            data(){
+                return{
+                    imgSrc:'https://vuejs.org/images/logo.png',
+                    message:''
+                }
+            },
+            methods:{
+                handleImageChange(){
+                    this.imgSrc = 'https://sponsors.vuejs.org/images/crmeb.svg?v2'
+                },
+                showMessage(){
+                    console.log(this.message)
+                },
+                clearMessage(){
+                    this.message=''
+                }
+            }
+        })
+    </script>
+</body>
+</html>

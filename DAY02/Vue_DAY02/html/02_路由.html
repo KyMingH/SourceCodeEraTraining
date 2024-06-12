@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <!-- 开发环境版本，包含了有帮助的命令行警告 -->
+        <!-- <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script> -->
+        <script src="../js/vue.js"></script>
+        <script src="../js/vue-router.js"></script>
+        <title>Document</title>
+        <style>
+            html, body {
+                margin: 0;
+                padding: 0;
+                width: 100%;
+                height: 100%;
+            }
+
+            #app {
+                width: 100%;
+                height: 100%;
+                background-color: #ccc;
+            }
+
+            #left {
+                position: absolute;
+                width: 200px;
+                height: 100%;
+                background-color: lightblue;
+            }
+
+            #right {
+                position: absolute;
+                left: 200px;
+                right: 0;
+                height: 100%;
+                background-color: #fff;
+            }
+        </style>
+    </head>
+    <body>
+        <div id="app">
+           <div id="left">
+            <ul>
+                <li>
+                    <router-link to="/student">学生管理</router-link>
+                </li>
+                <li>
+                    <router-link to="/teacher">教师管理</router-link>
+                </li>
+                <li>
+                    <router-link to="/course">课程管理</router-link>
+                </li>
+            </ul>
+           </div>
+           <div id="right">
+                <router-view></router-view>
+           </div>
+        </div>
+        <script>
+            let studentcomponent = Vue.component('student',{
+                template:'<div>学生管理页面</div>'
+            })
+            let teachercomponent = Vue.component('teacher',{
+                template:'<div>教师管理页面</div>'
+            })
+            let coursecomponent = Vue.component('course',{
+                template:'<div>课程管理页面</div>'
+            })
+
+            let router = new VueRouter({
+                routes:[{
+                    path:'/student',
+                    component:studentcomponent
+                },
+                {
+                    path:'/teacher',
+                    component:teachercomponent
+                },{
+                    path:'/course',
+                    component:coursecomponent
+                }]
+            })
+
+            new Vue({
+                el:'#app',
+                router : router,
+                data(){
+                    return{
+                        
+                    }
+                },
+                methods:{
+                    
+                }
+            })
+        </script>
+    </body>
+</html>

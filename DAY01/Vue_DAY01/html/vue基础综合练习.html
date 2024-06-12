@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <!-- 开发环境版本，包含了有帮助的命令行警告 -->
+        <!-- <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script> -->
+        <script src="../js/vue.js"></script>
+        <title>Document</title>
+        <style type="text/css">
+            body {
+                font-family: Arial, sans-serif;
+            }
+            table {
+                width: 60%;
+                margin: 20px auto;
+                border-collapse: collapse; /* 使边框合并为一个 */
+            }
+            th, td {
+                border: 1px solid #ddd; /* 改变边框颜色 */
+                text-align: center; /* 文本居中 */
+                padding: 10px; /* 单元格内边距 */
+            }
+            th {
+                background-color: #f2f2f2; /* 标题行背景色 */
+            }
+            tr:nth-child(even) {
+                background-color: #f9f9f9; /* 偶数行的背景色 */
+            }
+            button {
+                padding: 5px 10px;
+                margin: 0 5px;
+                cursor: pointer;
+            }
+        </style>
+    </head>
+    <body>
+        <div id="app">
+            <table v-if="products.length > 0">
+                <tr>
+                    <td>序号</td>
+                    <td>名称</td>
+                    <td>单价</td>
+                    <td>数量</td>
+                    <td>总价</td>
+                </tr>
+                <tr v-for="(product,index) in products">
+                    <td>{{ index + 1 }}</td>
+                    <td>{{ product.name }}</td>
+                    <td>{{ product.price }}</td>
+                    <td>
+                        <button v-on:click="handleDec(index)">-</button>
+                        {{ product.num }}
+                        <button v-on:click="handleInc(index)">+</button>
+                    </td>
+                    <td>{{ product.num * product.price }}</td>
+                </tr>
+
+                <tr>
+                    <td>总计:</td>
+                    <td colspan="4">{{ computeTotal() }}</td>
+                </tr>
+            </table>
+            <div v-else>
+                空空如也
+            </div>
+        </div>
+        <script>
+            new Vue({
+                el:'#app',
+                data(){
+                    return{
+                        products:[{
+                            name:'小米su7',
+                            price:200000,
+                            num:2
+                        },
+                        {
+                            name:'问界M9',
+                            price:390000,
+                            num:2
+                        },
+                        {
+                            name:'华为P70 Pro',
+                            price:8000,
+                            num:2
+                        },
+                        {
+                            name:'华为电视',
+                            price:7000,
+                            num:2
+                        }
+                    ]
+                    }
+                },
+                methods:{
+                    computeTotal(){
+                        let total = 0;
+                        for (let i = 0; i < this.products.length; i++) {
+                            total += this.products[i].price * this.products[i].num;
+                        }
+                        return total;
+                    },
+                    handleDec(index){
+                        this.products[index].num -= 1
+                        if(this.products[index].num <= 0){
+                            this.products.splice(index,1)
+                        }
+                    },
+                    handleInc(index){
+                        this.products[index].num += 1
+                    }
+                }
+            })
+        </script>
+    </body>
+</html>

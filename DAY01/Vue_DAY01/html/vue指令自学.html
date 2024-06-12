@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vue Directives Example</title>
+  <script src="../js/vue.js"></script>
+</head>
+<body>
+  <div id="app">
+    <!-- v-bind 示例 alt 属性为图片提供了替代文本-->
+    <img v-bind:src="imageSrc" alt="Vue logo">
+
+    <!-- v-model 示例 placeholder用于在 <input>、<textarea> 或 <select> 元素中提供一个简短的提示或示例文本-->
+    <p>{{ message }}</p>
+    <input v-model="message" placeholder="Edit me">
+
+    <!-- v-on 示例 -->
+    <button v-on:click="reverseMessage">Reverse Message</button>
+
+    <!-- v-for 示例 :key 与 v-for 结合使用，为列表中的每个元素提供一个唯一的标识符。-->
+    <ul>
+      <li v-for="item in items" :key="item.id">{{ item.text }}</li>
+    </ul>
+
+    <!-- v-if 示例 -->
+    <p v-if="seen">Now you see me</p>
+
+    <!-- v-else 示例 -->
+    <p v-else>Now you don't see me</p>
+
+    <!-- v-show 示例 -->
+    <p v-show="isTrue">This is conditionally rendered</p>
+
+    <!-- v-cloak 示例 -->
+    <div v-cloak>
+      This text will only appear after the Vue instance has compiled this element.
+    </div>
+
+    <!-- v-text 示例 -->
+    <p v-text="fullName"></p>
+
+    <!-- v-html 示例 -->
+    <div v-html="htmlContent"></div>
+  </div>
+
+  <script>
+    new Vue({
+      el: '#app',
+      data: {
+        message: 'Hello Vue!',
+        imageSrc: 'https://vuejs.org/images/logo.png',
+        items: [{ id: 1, text: 'Item 1' }, { id: 2, text: 'Item 2' }],
+        seen: true,
+        isTrue: true,
+        fullName: 'John Doe',
+        htmlContent: '<b>This is bold text</b>'
+      },
+      methods: {
+        reverseMessage: function () {
+          this.message = this.message.split('').reverse().join('');
+        }
+      }
+    });
+  </script>
+</body>
+</html>
