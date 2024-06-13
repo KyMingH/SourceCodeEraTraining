@@ -44,8 +44,8 @@
         width="40%"
         :before-close="handleClose">
         <template slot-scope="scope">
-            <el-form ref="form" :model="form" label-width="80px">
-            <el-form-item label="名字">
+            <el-form ref="form" :model="form" :rules="rules" label-width="80px">
+            <el-form-item label="名字" prop="name">
                 <el-input v-model="form.name" placeholder="请输入姓名"></el-input>
             </el-form-item>
             <el-form-item label="性别">
@@ -67,7 +67,7 @@
                   </el-date-picker>
                 </el-col>
             </el-form-item>
-            <el-form-item label="联系方式">
+            <el-form-item label="联系方式" prop="telephone">
                 <el-input v-model="form.telephone"></el-input>
             </el-form-item>
             <el-form-item label="学历">
@@ -90,7 +90,7 @@
         </template>
         <span slot="footer" class="dialog-footer">
             <el-button @click="dialogVisible = false">取 消</el-button>
-            <el-button type="primary" @click=handleSave()>确 定</el-button>
+            <el-button type="primary" @click="submitForm('form')">确 定</el-button>
         </span>
         </el-dialog>
     </div>
@@ -100,8 +100,26 @@
 // export default: 这行代码表示导出一个默认对象，使得其他文件可以通过import语句引入这个对象。
 export default {
   data () { 
+    var validateTelephone = (rule, value, callback) => {
+        let pattern = /^(13[0-9]|14[01456879]|15[0-35-9]|16[2567]|17[0-8]|18[0-9]|19[0-35-9])\d{8}$/
+        if (value !== '' && !pattern.test(value)){
+          callback(new Error('请输入正确的手机号码'))
+        }else{
+          callback();
+        }
+      };
     return {
+      rules: {
+          name: [
+            { required: true, message: '请输入名字', trigger: 'blur' },
+          ],
+          telephone: [
+            { validator: validateTelephone, trigger: 'blur' }
+          ],
+      },
+      isEditing: false, // 标记是否处于编辑模式
         form: {
+          id: 0,
           name: '',
           gender: '',
           birthday: '',
@@ -117,7 +135,7 @@ export default {
         gender: '1', // 1 男 2 女
         birthday: '2003-03-22',
         telephone: '13690555323',
-        degree: '2', // 1 中学 2 大学 3 硕士 4 博士 5 博士后
+        degree: '2', 
         desc: '这个人很牛逼',
         state: '1' // 0 冻结 1 正常
       },
@@ -136,20 +154,28 @@ export default {
         label: '中学' 
       },{
         key: 2,
-        label: '大学' 
+        label: '高中' 
       },{
         key: 3,
-        label: '硕士' 
+        label: '本来' 
       },{
         key: 4,
-        label: '博士' 
+        label: '硕士' 
       },{
         key: 5,
-        label: '博士后' 
+        label: '博士' 
       }]
     }
   },
   methods: {
+    submitForm(form) {
+        this.$refs[form].validate((valid) => {
+          if (valid) {
+            this.handleSaveEdit();
+          } else {
+          }
+        });
+      },
     handleDateChange(value) {
     if (value) {
       // 将日期对象转换为字符串，例如：'2024-06-12'
@@ -173,10 +199,31 @@ export default {
     handleEdit(index, student) {
       // 将当前点击的学生信息填充到表单中
       this.form = { ...student };
-      this.handleDelete(index, student, true);
+      this.isEditing = true; // 设置为编辑模式
       // 显示编辑对话框
       this.dialogVisible = true;
       // 可以添加其他编辑前需要执行的逻辑
+    },
+    handleSaveEdit() {
+      if (!this.isEditing) {
+        // 如果不是编辑模式，则调用添加学生的逻辑
+        this.handleSave();
+      } else {
+        // 更新 students 数组中对应的学生记录
+        const index = this.students.findIndex(s => s.id === this.form.id);
+        if (index !== -1) {
+          this.students.splice(index, 1, { ...this.form });
+          // 关闭对话框
+          this.dialogVisible = false;
+          // 提示用户编辑成功
+          this.$message({
+            message: '编辑成功',
+            type: 'success'
+          });
+          // 重置编辑模式
+          this.isEditing = false;
+        }
+      }
     },
     handleDelete(index, student, Edit) {
     // 向用户确认删除操作
@@ -217,6 +264,7 @@ export default {
       return label
     },
     handleSave () { 
+      this.form.id = this.students.length
       this.students.push(this.form)
       // 关闭输入框
       this.dialogVisible = false
@@ -227,6 +275,7 @@ export default {
       });
       // 重置form
       this.form = {
+      id:0,
       name: '',
       gender: '',
       birthday: '',
