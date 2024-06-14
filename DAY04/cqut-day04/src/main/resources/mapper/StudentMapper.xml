@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--
+这个mapper文件是sql映射文件
+我们会把关于Student的增删改查sql全部写在这里统一维护
+namespace 命名空间
+暂时放Stduent类的完全限定名   包名.类名-->
+<mapper namespace="cn.itsource.domain.Student">
+    <!--
+     id 是这个sql的唯一标识
+    resultType 很重要 mybatis查询出来结果之后，会自动将每一行
+    数据封装到resultType对象的一个类型的对象中
+    类型的完全限定名-->
+    <select id="selectAll"
+            resultType="cn.itsource.domain.Student">
+        select * from student
+    </select>
+    <select id="selectById"
+            resultType="cn.itsource.domain.Student">
+        select * from student where id = #{id}
+    </select>
+    <!-- insert 操作 -->
+    <insert id="insert" parameterType="cn.itsource.domain.Student" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO student (name, gender, birthday, telephone, degree, `desc`, state)
+        VALUES (#{name}, #{gender}, #{birthday}, #{telephone}, #{degree}, #{desc}, #{state})
+    </insert>
+
+    <!-- updateById 操作 -->
+    <update id="updateById" parameterType="cn.itsource.domain.Student">
+        UPDATE student
+        SET name=#{name},
+        gender=#{gender},
+        birthday=#{birthday},
+        telephone=#{telephone},
+        degree=#{degree},
+        `desc`=#{desc},
+        state=#{state}
+        WHERE id=#{id}
+    </update>
+
+    <!-- deleteById 操作 -->
+    <delete id="deleteById">
+        DELETE FROM student WHERE id = #{id}
+    </delete>
+</mapper>
