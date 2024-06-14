@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-config.dtd">
+<!--
+   configuration 根标签-->
+<configuration>
+    <!--
+        environments ： 环境
+            default ： 默认使用哪个环境
+    -->
+    <environments default="development">
+        <!--开发环境-->
+        <!--
+            environment : 一个环境
+                id 环境的标识，用于配置到environments的
+defaults中
+        -->
+        <environment id="development">
+            <!--
+                transactionManager 事务管理
+                    type
+            -->
+            <transactionManager type="JDBC"/>
+            <!--
+                dataSource : 数据源 - 数据库环境
+                    type： POOLED 池化技术，连接复用
+            -->
+            <dataSource type="POOLED">
+                <!--
+               数据库连接的四大金刚-->
+                <property name="driver"
+                          value="com.mysql.cj.jdbc.Driver"/>
+                <property name="url"
+                          value="jdbc:mysql://localhost:3306/cqut?
+ useUnicode=true&amp;characterEncoding=utf8&amp;serve
+ rTimezone=GMT%2B8"/>
+                <property name="username"
+                          value="root"/>
+                <property name="password"
+                          value="112520ki"/>
+            </dataSource>
+        </environment>
+    </environments>
+    <mappers>
+        <mapper resource="mapper/StudentMapper.xml"/>
+    </mappers>
+</configuration>
