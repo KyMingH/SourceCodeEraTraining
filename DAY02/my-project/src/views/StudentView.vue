@@ -74,11 +74,10 @@
           </div>
           <div class="demo-input-suffix">
             性别：
-            <el-input
-              placeholder="请输入内容"
-              v-model="query.gender">
-              <i slot="prefix" class="el-input__icon el-icon-search"></i>
-            </el-input>
+              <div>
+                <el-radio v-model="query.gender" label="1">男</el-radio>
+                <el-radio v-model="query.gender" label="2">女</el-radio>
+              </div>
           </div>
           <div class="demo-input-suffix">
             出生日期：
@@ -103,19 +102,20 @@
           </div>
           <div class="demo-input-suffix">
             学历：
-            <el-input
-              placeholder="请输入内容"
-              v-model="query.degree">
-              <i slot="prefix" class="el-input__icon el-icon-search"></i>
-            </el-input>
+            <el-radio-group v-model="query.degree">
+                <el-radio-button label="1">中学</el-radio-button>
+                <el-radio-button label="2">高中</el-radio-button>
+                <el-radio-button label="3">本科</el-radio-button>
+                <el-radio-button label="4">硕士</el-radio-button>
+                <el-radio-button label="5">博士</el-radio-button>
+                </el-radio-group>
           </div>
           <div class="demo-input-suffix">
             状态：
-            <el-input
-              placeholder="请输入内容"
-              v-model="query.state">
-              <i slot="prefix" class="el-input__icon el-icon-search"></i>
-            </el-input>
+            <el-radio-group v-model="query.state">
+                <el-radio-button label="1">正常</el-radio-button>
+                <el-radio-button label="2">冻结</el-radio-button>
+                </el-radio-group>
           </div>
         </div>
         <el-dialog
