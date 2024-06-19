@@ -14,4 +14,7 @@ public class UserCache {
     public static void removeUser(String token){
         userMap.remove(token);
     }
+    public static boolean exists(String token){
+        return userMap.containsKey(token);
+    }
 }
