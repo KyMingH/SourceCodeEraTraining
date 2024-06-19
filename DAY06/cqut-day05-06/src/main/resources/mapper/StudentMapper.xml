@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper
+3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd"
+        >
+<mapper namespace="cn.itsource.mapper.StudentMapper">
+    <select id="selectAll"
+            resultType="cn.itsource.domain.Student">
+        select * from student
+    </select>
+    <!--
+    #{xxx} 的 原理是 调用对象的 getXxx方法
+   再底层的原理就是java的反射-->
+    <select id="selectPage" resultType="cn.itsource.domain.Student">
+        select * from student
+        limit #{startIndex},#{pageSize}
+    </select>
+    <!--
+   一个select标签只能执行一次查询-->
+    <select id="selectCount" resultType="java.lang.Long">
+        select count(*) from student
+    </select>
+
+    <select id="selectById" resultType="cn.itsource.domain.Student">
+        select * from student where id = #{id}
+    </select>
+
+    <insert id="insert" parameterType="cn.itsource.domain.Student" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO student (name, gender, birthday, telephone, degree, `desc`, state)
+        VALUES (#{name}, #{gender}, #{birthday}, #{telephone}, #{degree}, #{desc}, #{state})
+    </insert>
+
+    <delete id="delete">
+        DELETE FROM student WHERE id = #{id};
+    </delete>
+    <!--
+        mybatis的动态sql - mybatis中很牛逼的语法
+    -->
+    <select id="queryPage"
+            resultType="cn.itsource.domain.Student">
+        select * from student
+        <include refid="querySql"></include>
+        limit #{startIndex},#{pageSize}
+    </select>
+    <select id="queryCount" resultType="java.lang.Long">
+        select count(*) from student
+        <include refid="querySql"></include>
+    </select>
+
+    <!--
+扩延：抽取sql片段-->
+    <sql id="querySql">
+        <where>
+            <if test="name != null and name != ''">
+                and name = #{name}
+            </if>
+            <if test="gender != null and gender != ''">
+                and gender = #{gender}
+            </if>
+            <if test="birthdayBegin != null">
+                and birthday &gt;= #{birthdayBegin}
+            </if>
+            <if test="birthdayEnd != null">
+                and birthday &gt;= #{birthdayEnd}
+            </if>
+            <if test="telephone != null and telephone != ''">
+                and telephone = #{telephone}
+            </if>
+            <if test="degree != null and degree != ''">
+                and degree = #{degree}
+            </if>
+            <if test="desc != null and desc != ''">
+                and `desc` like concat('%',#{desc},'%')
+            </if>
+            <if test="state != null and state != ''">
+                and state = #{state}
+            </if>
+        </where>
+    </sql>
+</mapper>
