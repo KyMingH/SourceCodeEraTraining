@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.EducationStudentMapper">
+    
+    <resultMap type="EducationStudent" id="EducationStudentResult">
+        <result property="id"    column="id"    />
+        <result property="name"    column="name"    />
+        <result property="nameUniversity"    column="name_university"    />
+        <result property="collegeMajors"    column="college_majors"    />
+        <result property="degree"    column="degree"    />
+        <result property="graduationTime"    column="graduation_time"    />
+        <result property="fullTimeStatus"    column="full_time_status"    />
+        <result property="phoneNumber"    column="phone_number"    />
+        <result property="idNumber"    column="id_number"    />
+        <result property="currentClass"    column="current_class"    />
+        <result property="homeroomTeacher"    column="homeroom_teacher"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="remark"    column="remark"    />
+    </resultMap>
+
+    <sql id="selectEducationStudentVo">
+        select id, name, name_university, college_majors, degree, graduation_time, full_time_status, phone_number, id_number, current_class, homeroom_teacher, create_by, create_time, update_by, update_time, remark from education_student
+    </sql>
+
+    <select id="selectEducationStudentList" parameterType="EducationStudent" resultMap="EducationStudentResult">
+        <include refid="selectEducationStudentVo"/>
+        <where>  
+            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+            <if test="nameUniversity != null  and nameUniversity != ''"> and name_university = #{nameUniversity}</if>
+            <if test="collegeMajors != null  and collegeMajors != ''"> and college_majors = #{collegeMajors}</if>
+            <if test="degree != null  and degree != ''"> and degree = #{degree}</if>
+            <if test="params.beginGraduationTime != null and params.beginGraduationTime != '' and params.endGraduationTime != null and params.endGraduationTime != ''"> and graduation_time between #{params.beginGraduationTime} and #{params.endGraduationTime}</if>
+            <if test="fullTimeStatus != null  and fullTimeStatus != ''"> and full_time_status = #{fullTimeStatus}</if>
+            <if test="idNumber != null  and idNumber != ''"> and id_number = #{idNumber}</if>
+            <if test="currentClass != null  and currentClass != ''"> and current_class = #{currentClass}</if>
+            <if test="homeroomTeacher != null  and homeroomTeacher != ''"> and homeroom_teacher = #{homeroomTeacher}</if>
+        </where>
+    </select>
+    
+    <select id="selectEducationStudentById" parameterType="Long" resultMap="EducationStudentResult">
+        <include refid="selectEducationStudentVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertEducationStudent" parameterType="EducationStudent">
+        insert into education_student
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="name != null and name != ''">name,</if>
+            <if test="nameUniversity != null and nameUniversity != ''">name_university,</if>
+            <if test="collegeMajors != null and collegeMajors != ''">college_majors,</if>
+            <if test="degree != null and degree != ''">degree,</if>
+            <if test="graduationTime != null">graduation_time,</if>
+            <if test="fullTimeStatus != null and fullTimeStatus != ''">full_time_status,</if>
+            <if test="phoneNumber != null and phoneNumber != ''">phone_number,</if>
+            <if test="idNumber != null and idNumber != ''">id_number,</if>
+            <if test="currentClass != null and currentClass != ''">current_class,</if>
+            <if test="homeroomTeacher != null">homeroom_teacher,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="remark != null">remark,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="name != null and name != ''">#{name},</if>
+            <if test="nameUniversity != null and nameUniversity != ''">#{nameUniversity},</if>
+            <if test="collegeMajors != null and collegeMajors != ''">#{collegeMajors},</if>
+            <if test="degree != null and degree != ''">#{degree},</if>
+            <if test="graduationTime != null">#{graduationTime},</if>
+            <if test="fullTimeStatus != null and fullTimeStatus != ''">#{fullTimeStatus},</if>
+            <if test="phoneNumber != null and phoneNumber != ''">#{phoneNumber},</if>
+            <if test="idNumber != null and idNumber != ''">#{idNumber},</if>
+            <if test="currentClass != null and currentClass != ''">#{currentClass},</if>
+            <if test="homeroomTeacher != null">#{homeroomTeacher},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remark != null">#{remark},</if>
+         </trim>
+    </insert>
+
+    <update id="updateEducationStudent" parameterType="EducationStudent">
+        update education_student
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="name != null and name != ''">name = #{name},</if>
+            <if test="nameUniversity != null and nameUniversity != ''">name_university = #{nameUniversity},</if>
+            <if test="collegeMajors != null and collegeMajors != ''">college_majors = #{collegeMajors},</if>
+            <if test="degree != null and degree != ''">degree = #{degree},</if>
+            <if test="graduationTime != null">graduation_time = #{graduationTime},</if>
+            <if test="fullTimeStatus != null and fullTimeStatus != ''">full_time_status = #{fullTimeStatus},</if>
+            <if test="phoneNumber != null and phoneNumber != ''">phone_number = #{phoneNumber},</if>
+            <if test="idNumber != null and idNumber != ''">id_number = #{idNumber},</if>
+            <if test="currentClass != null and currentClass != ''">current_class = #{currentClass},</if>
+            <if test="homeroomTeacher != null">homeroom_teacher = #{homeroomTeacher},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="remark != null">remark = #{remark},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteEducationStudentById" parameterType="Long">
+        delete from education_student where id = #{id}
+    </delete>
+
+    <delete id="deleteEducationStudentByIds" parameterType="String">
+        delete from education_student where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

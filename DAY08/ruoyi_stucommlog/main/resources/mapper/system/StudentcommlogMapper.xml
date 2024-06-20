@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.StudentcommlogMapper">
+    
+    <resultMap type="Studentcommlog" id="StudentcommlogResult">
+        <result property="id"    column="id"    />
+        <result property="communicationTime"    column="communication_time"    />
+        <result property="studentInvolved"    column="student_involved"    />
+        <result property="teacherInvolved"    column="teacher_involved"    />
+        <result property="communicationIssue"    column="communication_issue"    />
+        <result property="feedbackReceived"    column="feedback_received"    />
+        <result property="nextCommunicationSchedule"    column="next_communication_schedule"    />
+        <result property="communicationEffectivenessRating"    column="communication_effectiveness_rating"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="remark"    column="remark"    />
+    </resultMap>
+
+    <sql id="selectStudentcommlogVo">
+        select id, communication_time, student_involved, teacher_involved, communication_issue, feedback_received, next_communication_schedule, communication_effectiveness_rating, create_by, create_time, update_by, update_time, remark from studentcommlog
+    </sql>
+
+    <select id="selectStudentcommlogList" parameterType="Studentcommlog" resultMap="StudentcommlogResult">
+        <include refid="selectStudentcommlogVo"/>
+        <where>  
+            <if test="params.beginCommunicationTime != null and params.beginCommunicationTime != '' and params.endCommunicationTime != null and params.endCommunicationTime != ''"> and communication_time between #{params.beginCommunicationTime} and #{params.endCommunicationTime}</if>
+            <if test="studentInvolved != null  and studentInvolved != ''"> and student_involved = #{studentInvolved}</if>
+            <if test="teacherInvolved != null  and teacherInvolved != ''"> and teacher_involved = #{teacherInvolved}</if>
+            <if test="communicationIssue != null  and communicationIssue != ''"> and communication_issue like concat('%', #{communicationIssue}, '%')</if>
+            <if test="feedbackReceived != null  and feedbackReceived != ''"> and feedback_received like concat('%', #{feedbackReceived}, '%')</if>
+            <if test="params.beginNextCommunicationSchedule != null and params.beginNextCommunicationSchedule != '' and params.endNextCommunicationSchedule != null and params.endNextCommunicationSchedule != ''"> and next_communication_schedule between #{params.beginNextCommunicationSchedule} and #{params.endNextCommunicationSchedule}</if>
+            <if test="communicationEffectivenessRating != null  and communicationEffectivenessRating != ''"> and communication_effectiveness_rating = #{communicationEffectivenessRating}</if>
+        </where>
+    </select>
+    
+    <select id="selectStudentcommlogById" parameterType="Long" resultMap="StudentcommlogResult">
+        <include refid="selectStudentcommlogVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertStudentcommlog" parameterType="Studentcommlog">
+        insert into studentcommlog
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="communicationTime != null">communication_time,</if>
+            <if test="studentInvolved != null and studentInvolved != ''">student_involved,</if>
+            <if test="teacherInvolved != null and teacherInvolved != ''">teacher_involved,</if>
+            <if test="communicationIssue != null and communicationIssue != ''">communication_issue,</if>
+            <if test="feedbackReceived != null and feedbackReceived != ''">feedback_received,</if>
+            <if test="nextCommunicationSchedule != null">next_communication_schedule,</if>
+            <if test="communicationEffectivenessRating != null and communicationEffectivenessRating != ''">communication_effectiveness_rating,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="remark != null">remark,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="communicationTime != null">#{communicationTime},</if>
+            <if test="studentInvolved != null and studentInvolved != ''">#{studentInvolved},</if>
+            <if test="teacherInvolved != null and teacherInvolved != ''">#{teacherInvolved},</if>
+            <if test="communicationIssue != null and communicationIssue != ''">#{communicationIssue},</if>
+            <if test="feedbackReceived != null and feedbackReceived != ''">#{feedbackReceived},</if>
+            <if test="nextCommunicationSchedule != null">#{nextCommunicationSchedule},</if>
+            <if test="communicationEffectivenessRating != null and communicationEffectivenessRating != ''">#{communicationEffectivenessRating},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remark != null">#{remark},</if>
+         </trim>
+    </insert>
+
+    <update id="updateStudentcommlog" parameterType="Studentcommlog">
+        update studentcommlog
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="communicationTime != null">communication_time = #{communicationTime},</if>
+            <if test="studentInvolved != null and studentInvolved != ''">student_involved = #{studentInvolved},</if>
+            <if test="teacherInvolved != null and teacherInvolved != ''">teacher_involved = #{teacherInvolved},</if>
+            <if test="communicationIssue != null and communicationIssue != ''">communication_issue = #{communicationIssue},</if>
+            <if test="feedbackReceived != null and feedbackReceived != ''">feedback_received = #{feedbackReceived},</if>
+            <if test="nextCommunicationSchedule != null">next_communication_schedule = #{nextCommunicationSchedule},</if>
+            <if test="communicationEffectivenessRating != null and communicationEffectivenessRating != ''">communication_effectiveness_rating = #{communicationEffectivenessRating},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="remark != null">remark = #{remark},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteStudentcommlogById" parameterType="Long">
+        delete from studentcommlog where id = #{id}
+    </delete>
+
+    <delete id="deleteStudentcommlogByIds" parameterType="String">
+        delete from studentcommlog where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>
