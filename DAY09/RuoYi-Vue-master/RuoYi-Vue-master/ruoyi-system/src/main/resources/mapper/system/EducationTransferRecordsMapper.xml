@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.EducationTransferRecordsMapper">
+    
+    <resultMap type="EducationTransferRecords" id="EducationTransferRecordsResult">
+        <result property="id"    column="id"    />
+        <result property="studentId"    column="student_id"    />
+        <result property="fromClass"    column="from_class"    />
+        <result property="toClass"    column="to_class"    />
+        <result property="transferDate"    column="transfer_date"    />
+        <result property="reason"    column="reason"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+
+    <sql id="selectEducationTransferRecordsVo">
+        select id, student_id, from_class, to_class, transfer_date, reason, create_by, create_time, update_by, update_time from education_transfer_records
+    </sql>
+
+    <select id="selectEducationTransferRecordsList" parameterType="EducationTransferRecords" resultMap="EducationTransferRecordsResult">
+        <include refid="selectEducationTransferRecordsVo"/>
+        <where>  
+            <if test="studentId != null "> and student_id = #{studentId}</if>
+            <if test="fromClass != null  and fromClass != ''"> and from_class = #{fromClass}</if>
+            <if test="toClass != null  and toClass != ''"> and to_class = #{toClass}</if>
+            <if test="transferDate != null "> and transfer_date = #{transferDate}</if>
+            <if test="reason != null  and reason != ''"> and reason like concat('%', #{reason}, '%')</if>
+        </where>
+    </select>
+    
+    <select id="selectEducationTransferRecordsById" parameterType="Long" resultMap="EducationTransferRecordsResult">
+        <include refid="selectEducationTransferRecordsVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertEducationTransferRecords" parameterType="EducationTransferRecords" useGeneratedKeys="true" keyProperty="id">
+        insert into education_transfer_records
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="studentId != null">student_id,</if>
+            <if test="fromClass != null and fromClass != ''">from_class,</if>
+            <if test="toClass != null and toClass != ''">to_class,</if>
+            <if test="transferDate != null">transfer_date,</if>
+            <if test="reason != null">reason,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="studentId != null">#{studentId},</if>
+            <if test="fromClass != null and fromClass != ''">#{fromClass},</if>
+            <if test="toClass != null and toClass != ''">#{toClass},</if>
+            <if test="transferDate != null">#{transferDate},</if>
+            <if test="reason != null">#{reason},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateEducationTransferRecords" parameterType="EducationTransferRecords">
+        update education_transfer_records
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="studentId != null">student_id = #{studentId},</if>
+            <if test="fromClass != null and fromClass != ''">from_class = #{fromClass},</if>
+            <if test="toClass != null and toClass != ''">to_class = #{toClass},</if>
+            <if test="transferDate != null">transfer_date = #{transferDate},</if>
+            <if test="reason != null">reason = #{reason},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteEducationTransferRecordsById" parameterType="Long">
+        delete from education_transfer_records where id = #{id}
+    </delete>
+
+    <delete id="deleteEducationTransferRecordsByIds" parameterType="String">
+        delete from education_transfer_records where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>
