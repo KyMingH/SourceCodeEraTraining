@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.StudentApplicationMapper">
+    
+    <resultMap type="StudentApplication" id="StudentApplicationResult">
+        <result property="applicationId"    column="application_id"    />
+        <result property="studentId"    column="student_id"    />
+        <result property="applicationType"    column="application_type"    />
+        <result property="applicationDate"    column="application_date"    />
+        <result property="approvalStatus"    column="approval_status"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="remark"    column="remark"    />
+    </resultMap>
+
+    <sql id="selectStudentApplicationVo">
+        select application_id, student_id, application_type, application_date, approval_status, create_by, create_time, update_by, update_time, remark from student_application
+    </sql>
+
+    <select id="selectStudentApplicationList" parameterType="StudentApplication" resultMap="StudentApplicationResult">
+        <include refid="selectStudentApplicationVo"/>
+        <where>  
+            <if test="applicationType != null  and applicationType != ''"> and application_type = #{applicationType}</if>
+            <if test="applicationDate != null "> and application_date = #{applicationDate}</if>
+            <if test="approvalStatus != null  and approvalStatus != ''"> and approval_status = #{approvalStatus}</if>
+        </where>
+    </select>
+    
+    <select id="selectStudentApplicationByApplicationId" parameterType="Long" resultMap="StudentApplicationResult">
+        <include refid="selectStudentApplicationVo"/>
+        where application_id = #{applicationId}
+    </select>
+
+    <insert id="insertStudentApplication" parameterType="StudentApplication" useGeneratedKeys="true" keyProperty="applicationId">
+        insert into student_application
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="studentId != null">student_id,</if>
+            <if test="applicationType != null">application_type,</if>
+            <if test="applicationDate != null">application_date,</if>
+            <if test="approvalStatus != null">approval_status,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="remark != null">remark,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="studentId != null">#{studentId},</if>
+            <if test="applicationType != null">#{applicationType},</if>
+            <if test="applicationDate != null">#{applicationDate},</if>
+            <if test="approvalStatus != null">#{approvalStatus},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remark != null">#{remark},</if>
+         </trim>
+    </insert>
+
+    <update id="updateStudentApplication" parameterType="StudentApplication">
+        update student_application
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="studentId != null">student_id = #{studentId},</if>
+            <if test="applicationType != null">application_type = #{applicationType},</if>
+            <if test="applicationDate != null">application_date = #{applicationDate},</if>
+            <if test="approvalStatus != null">approval_status = #{approvalStatus},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="remark != null">remark = #{remark},</if>
+        </trim>
+        where application_id = #{applicationId}
+    </update>
+
+    <delete id="deleteStudentApplicationByApplicationId" parameterType="Long">
+        delete from student_application where application_id = #{applicationId}
+    </delete>
+
+    <delete id="deleteStudentApplicationByApplicationIds" parameterType="String">
+        delete from student_application where application_id in 
+        <foreach item="applicationId" collection="array" open="(" separator="," close=")">
+            #{applicationId}
+        </foreach>
+    </delete>
+</mapper>

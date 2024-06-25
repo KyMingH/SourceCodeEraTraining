@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.StudentLeaveMapper">
+    
+    <resultMap type="StudentLeave" id="StudentLeaveResult">
+        <result property="leaveId"    column="leave_id"    />
+        <result property="studentId"    column="student_id"    />
+        <result property="leaveType"    column="leave_type"    />
+        <result property="leaveStartDate"    column="leave_start_date"    />
+        <result property="leaveEndDate"    column="leave_end_date"    />
+        <result property="approvalStatus"    column="approval_status"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="remark"    column="remark"    />
+    </resultMap>
+
+    <sql id="selectStudentLeaveVo">
+        select leave_id, student_id, leave_type, leave_start_date, leave_end_date, approval_status, create_by, create_time, update_by, update_time, remark from student_leave
+    </sql>
+
+    <select id="selectStudentLeaveList" parameterType="StudentLeave" resultMap="StudentLeaveResult">
+        <include refid="selectStudentLeaveVo"/>
+        <where>  
+            <if test="leaveType != null  and leaveType != ''"> and leave_type like concat('%', #{leaveType}, '%')</if>
+            <if test="leaveStartDate != null "> and leave_start_date = #{leaveStartDate}</if>
+            <if test="leaveEndDate != null "> and leave_end_date = #{leaveEndDate}</if>
+            <if test="approvalStatus != null  and approvalStatus != ''"> and approval_status = #{approvalStatus}</if>
+        </where>
+    </select>
+    
+    <select id="selectStudentLeaveByLeaveId" parameterType="Long" resultMap="StudentLeaveResult">
+        <include refid="selectStudentLeaveVo"/>
+        where leave_id = #{leaveId}
+    </select>
+
+    <insert id="insertStudentLeave" parameterType="StudentLeave" useGeneratedKeys="true" keyProperty="leaveId">
+        insert into student_leave
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="studentId != null">student_id,</if>
+            <if test="leaveType != null">leave_type,</if>
+            <if test="leaveStartDate != null">leave_start_date,</if>
+            <if test="leaveEndDate != null">leave_end_date,</if>
+            <if test="approvalStatus != null">approval_status,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="remark != null">remark,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="studentId != null">#{studentId},</if>
+            <if test="leaveType != null">#{leaveType},</if>
+            <if test="leaveStartDate != null">#{leaveStartDate},</if>
+            <if test="leaveEndDate != null">#{leaveEndDate},</if>
+            <if test="approvalStatus != null">#{approvalStatus},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remark != null">#{remark},</if>
+         </trim>
+    </insert>
+
+    <update id="updateStudentLeave" parameterType="StudentLeave">
+        update student_leave
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="studentId != null">student_id = #{studentId},</if>
+            <if test="leaveType != null">leave_type = #{leaveType},</if>
+            <if test="leaveStartDate != null">leave_start_date = #{leaveStartDate},</if>
+            <if test="leaveEndDate != null">leave_end_date = #{leaveEndDate},</if>
+            <if test="approvalStatus != null">approval_status = #{approvalStatus},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="remark != null">remark = #{remark},</if>
+        </trim>
+        where leave_id = #{leaveId}
+    </update>
+
+    <delete id="deleteStudentLeaveByLeaveId" parameterType="Long">
+        delete from student_leave where leave_id = #{leaveId}
+    </delete>
+
+    <delete id="deleteStudentLeaveByLeaveIds" parameterType="String">
+        delete from student_leave where leave_id in 
+        <foreach item="leaveId" collection="array" open="(" separator="," close=")">
+            #{leaveId}
+        </foreach>
+    </delete>
+</mapper>

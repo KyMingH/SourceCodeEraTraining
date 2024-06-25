@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.ClassAttendanceMapper">
+    
+    <resultMap type="ClassAttendance" id="ClassAttendanceResult">
+        <result property="attendanceId"    column="attendance_id"    />
+        <result property="classId"    column="class_id"    />
+        <result property="studentId"    column="student_id"    />
+        <result property="attendanceDate"    column="attendance_date"    />
+        <result property="attendanceStatus"    column="attendance_status"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="remark"    column="remark"    />
+    </resultMap>
+
+    <sql id="selectClassAttendanceVo">
+        select attendance_id, class_id, student_id, attendance_date, attendance_status, create_by, create_time, update_by, update_time, remark from class_attendance
+    </sql>
+
+    <select id="selectClassAttendanceList" parameterType="ClassAttendance" resultMap="ClassAttendanceResult">
+        <include refid="selectClassAttendanceVo"/>
+        <where>  
+            <if test="attendanceDate != null "> and attendance_date = #{attendanceDate}</if>
+            <if test="attendanceStatus != null  and attendanceStatus != ''"> and attendance_status = #{attendanceStatus}</if>
+        </where>
+    </select>
+    
+    <select id="selectClassAttendanceByAttendanceId" parameterType="Long" resultMap="ClassAttendanceResult">
+        <include refid="selectClassAttendanceVo"/>
+        where attendance_id = #{attendanceId}
+    </select>
+
+    <insert id="insertClassAttendance" parameterType="ClassAttendance" useGeneratedKeys="true" keyProperty="attendanceId">
+        insert into class_attendance
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="classId != null">class_id,</if>
+            <if test="studentId != null">student_id,</if>
+            <if test="attendanceDate != null">attendance_date,</if>
+            <if test="attendanceStatus != null">attendance_status,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="remark != null">remark,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="classId != null">#{classId},</if>
+            <if test="studentId != null">#{studentId},</if>
+            <if test="attendanceDate != null">#{attendanceDate},</if>
+            <if test="attendanceStatus != null">#{attendanceStatus},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remark != null">#{remark},</if>
+         </trim>
+    </insert>
+
+    <update id="updateClassAttendance" parameterType="ClassAttendance">
+        update class_attendance
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="classId != null">class_id = #{classId},</if>
+            <if test="studentId != null">student_id = #{studentId},</if>
+            <if test="attendanceDate != null">attendance_date = #{attendanceDate},</if>
+            <if test="attendanceStatus != null">attendance_status = #{attendanceStatus},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="remark != null">remark = #{remark},</if>
+        </trim>
+        where attendance_id = #{attendanceId}
+    </update>
+
+    <delete id="deleteClassAttendanceByAttendanceId" parameterType="Long">
+        delete from class_attendance where attendance_id = #{attendanceId}
+    </delete>
+
+    <delete id="deleteClassAttendanceByAttendanceIds" parameterType="String">
+        delete from class_attendance where attendance_id in 
+        <foreach item="attendanceId" collection="array" open="(" separator="," close=")">
+            #{attendanceId}
+        </foreach>
+    </delete>
+</mapper>

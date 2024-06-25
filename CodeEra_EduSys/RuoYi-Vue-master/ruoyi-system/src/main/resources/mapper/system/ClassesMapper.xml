@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.ClassesMapper">
+    
+    <resultMap type="Classes" id="ClassesResult">
+        <result property="classId"    column="class_id"    />
+        <result property="className"    column="class_name"    />
+        <result property="startDate"    column="start_date"    />
+        <result property="endDate"    column="end_date"    />
+        <result property="classStatus"    column="class_status"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="remark"    column="remark"    />
+    </resultMap>
+
+    <sql id="selectClassesVo">
+        select class_id, class_name, start_date, end_date, class_status, create_by, create_time, update_by, update_time, remark from classes
+    </sql>
+
+    <select id="selectClassesList" parameterType="Classes" resultMap="ClassesResult">
+        <include refid="selectClassesVo"/>
+        <where>  
+            <if test="className != null  and className != ''"> and class_name like concat('%', #{className}, '%')</if>
+            <if test="params.beginStartDate != null and params.beginStartDate != '' and params.endStartDate != null and params.endStartDate != ''"> and start_date between #{params.beginStartDate} and #{params.endStartDate}</if>
+            <if test="params.beginEndDate != null and params.beginEndDate != '' and params.endEndDate != null and params.endEndDate != ''"> and end_date between #{params.beginEndDate} and #{params.endEndDate}</if>
+            <if test="classStatus != null  and classStatus != ''"> and class_status = #{classStatus}</if>
+        </where>
+    </select>
+    
+    <select id="selectClassesByClassId" parameterType="Long" resultMap="ClassesResult">
+        <include refid="selectClassesVo"/>
+        where class_id = #{classId}
+    </select>
+
+    <insert id="insertClasses" parameterType="Classes" useGeneratedKeys="true" keyProperty="classId">
+        insert into classes
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="className != null">class_name,</if>
+            <if test="startDate != null">start_date,</if>
+            <if test="endDate != null">end_date,</if>
+            <if test="classStatus != null">class_status,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="remark != null">remark,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="className != null">#{className},</if>
+            <if test="startDate != null">#{startDate},</if>
+            <if test="endDate != null">#{endDate},</if>
+            <if test="classStatus != null">#{classStatus},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remark != null">#{remark},</if>
+         </trim>
+    </insert>
+
+    <update id="updateClasses" parameterType="Classes">
+        update classes
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="className != null">class_name = #{className},</if>
+            <if test="startDate != null">start_date = #{startDate},</if>
+            <if test="endDate != null">end_date = #{endDate},</if>
+            <if test="classStatus != null">class_status = #{classStatus},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="remark != null">remark = #{remark},</if>
+        </trim>
+        where class_id = #{classId}
+    </update>
+
+    <delete id="deleteClassesByClassId" parameterType="Long">
+        delete from classes where class_id = #{classId}
+    </delete>
+
+    <delete id="deleteClassesByClassIds" parameterType="String">
+        delete from classes where class_id in 
+        <foreach item="classId" collection="array" open="(" separator="," close=")">
+            #{classId}
+        </foreach>
+    </delete>
+</mapper>

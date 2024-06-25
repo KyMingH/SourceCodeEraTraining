@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.AlumniFollowUpMapper">
+    
+    <resultMap type="AlumniFollowUp" id="AlumniFollowUpResult">
+        <result property="followUpId"    column="follow_up_id"    />
+        <result property="studentId"    column="student_id"    />
+        <result property="followUpDate"    column="follow_up_date"    />
+        <result property="followUpContent"    column="follow_up_content"    />
+        <result property="followUpPerson"    column="follow_up_person"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="remark"    column="remark"    />
+    </resultMap>
+
+    <sql id="selectAlumniFollowUpVo">
+        select follow_up_id, student_id, follow_up_date, follow_up_content, follow_up_person, create_by, create_time, update_by, update_time, remark from alumni_follow_up
+    </sql>
+
+    <select id="selectAlumniFollowUpList" parameterType="AlumniFollowUp" resultMap="AlumniFollowUpResult">
+        <include refid="selectAlumniFollowUpVo"/>
+        <where>  
+            <if test="params.beginFollowUpDate != null and params.beginFollowUpDate != '' and params.endFollowUpDate != null and params.endFollowUpDate != ''"> and follow_up_date between #{params.beginFollowUpDate} and #{params.endFollowUpDate}</if>
+            <if test="followUpContent != null  and followUpContent != ''"> and follow_up_content like concat('%', #{followUpContent}, '%')</if>
+            <if test="followUpPerson != null  and followUpPerson != ''"> and follow_up_person like concat('%', #{followUpPerson}, '%')</if>
+        </where>
+    </select>
+    
+    <select id="selectAlumniFollowUpByFollowUpId" parameterType="Long" resultMap="AlumniFollowUpResult">
+        <include refid="selectAlumniFollowUpVo"/>
+        where follow_up_id = #{followUpId}
+    </select>
+
+    <insert id="insertAlumniFollowUp" parameterType="AlumniFollowUp" useGeneratedKeys="true" keyProperty="followUpId">
+        insert into alumni_follow_up
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="studentId != null">student_id,</if>
+            <if test="followUpDate != null">follow_up_date,</if>
+            <if test="followUpContent != null">follow_up_content,</if>
+            <if test="followUpPerson != null">follow_up_person,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="remark != null">remark,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="studentId != null">#{studentId},</if>
+            <if test="followUpDate != null">#{followUpDate},</if>
+            <if test="followUpContent != null">#{followUpContent},</if>
+            <if test="followUpPerson != null">#{followUpPerson},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remark != null">#{remark},</if>
+         </trim>
+    </insert>
+
+    <update id="updateAlumniFollowUp" parameterType="AlumniFollowUp">
+        update alumni_follow_up
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="studentId != null">student_id = #{studentId},</if>
+            <if test="followUpDate != null">follow_up_date = #{followUpDate},</if>
+            <if test="followUpContent != null">follow_up_content = #{followUpContent},</if>
+            <if test="followUpPerson != null">follow_up_person = #{followUpPerson},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="remark != null">remark = #{remark},</if>
+        </trim>
+        where follow_up_id = #{followUpId}
+    </update>
+
+    <delete id="deleteAlumniFollowUpByFollowUpId" parameterType="Long">
+        delete from alumni_follow_up where follow_up_id = #{followUpId}
+    </delete>
+
+    <delete id="deleteAlumniFollowUpByFollowUpIds" parameterType="String">
+        delete from alumni_follow_up where follow_up_id in 
+        <foreach item="followUpId" collection="array" open="(" separator="," close=")">
+            #{followUpId}
+        </foreach>
+    </delete>
+</mapper>

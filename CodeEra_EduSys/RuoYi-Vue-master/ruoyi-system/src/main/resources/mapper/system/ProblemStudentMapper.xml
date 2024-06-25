@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.ProblemStudentMapper">
+    
+    <resultMap type="ProblemStudent" id="ProblemStudentResult">
+        <result property="recordId"    column="record_id"    />
+        <result property="studentId"    column="student_id"    />
+        <result property="category"    column="category"    />
+        <result property="communicationContent"    column="communication_content"    />
+        <result property="communicationDate"    column="communication_date"    />
+        <result property="followUpPerson"    column="follow_up_person"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="remark"    column="remark"    />
+    </resultMap>
+
+    <sql id="selectProblemStudentVo">
+        select record_id, student_id, category, communication_content, communication_date, follow_up_person, create_by, create_time, update_by, update_time, remark from problem_student
+    </sql>
+
+    <select id="selectProblemStudentList" parameterType="ProblemStudent" resultMap="ProblemStudentResult">
+        <include refid="selectProblemStudentVo"/>
+        <where>  
+            <if test="category != null  and category != ''"> and category = #{category}</if>
+            <if test="communicationContent != null  and communicationContent != ''"> and communication_content like concat('%', #{communicationContent}, '%')</if>
+            <if test="communicationDate != null "> and communication_date = #{communicationDate}</if>
+            <if test="followUpPerson != null  and followUpPerson != ''"> and follow_up_person like concat('%', #{followUpPerson}, '%')</if>
+        </where>
+    </select>
+    
+    <select id="selectProblemStudentByRecordId" parameterType="Long" resultMap="ProblemStudentResult">
+        <include refid="selectProblemStudentVo"/>
+        where record_id = #{recordId}
+    </select>
+
+    <insert id="insertProblemStudent" parameterType="ProblemStudent" useGeneratedKeys="true" keyProperty="recordId">
+        insert into problem_student
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="studentId != null">student_id,</if>
+            <if test="category != null">category,</if>
+            <if test="communicationContent != null">communication_content,</if>
+            <if test="communicationDate != null">communication_date,</if>
+            <if test="followUpPerson != null">follow_up_person,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="remark != null">remark,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="studentId != null">#{studentId},</if>
+            <if test="category != null">#{category},</if>
+            <if test="communicationContent != null">#{communicationContent},</if>
+            <if test="communicationDate != null">#{communicationDate},</if>
+            <if test="followUpPerson != null">#{followUpPerson},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remark != null">#{remark},</if>
+         </trim>
+    </insert>
+
+    <update id="updateProblemStudent" parameterType="ProblemStudent">
+        update problem_student
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="studentId != null">student_id = #{studentId},</if>
+            <if test="category != null">category = #{category},</if>
+            <if test="communicationContent != null">communication_content = #{communicationContent},</if>
+            <if test="communicationDate != null">communication_date = #{communicationDate},</if>
+            <if test="followUpPerson != null">follow_up_person = #{followUpPerson},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="remark != null">remark = #{remark},</if>
+        </trim>
+        where record_id = #{recordId}
+    </update>
+
+    <delete id="deleteProblemStudentByRecordId" parameterType="Long">
+        delete from problem_student where record_id = #{recordId}
+    </delete>
+
+    <delete id="deleteProblemStudentByRecordIds" parameterType="String">
+        delete from problem_student where record_id in 
+        <foreach item="recordId" collection="array" open="(" separator="," close=")">
+            #{recordId}
+        </foreach>
+    </delete>
+</mapper>

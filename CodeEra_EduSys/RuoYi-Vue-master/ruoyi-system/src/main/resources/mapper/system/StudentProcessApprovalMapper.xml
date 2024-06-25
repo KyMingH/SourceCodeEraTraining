@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.StudentProcessApprovalMapper">
+    
+    <resultMap type="StudentProcessApproval" id="StudentProcessApprovalResult">
+        <result property="approvalId"    column="approval_id"    />
+        <result property="studentId"    column="student_id"    />
+        <result property="processType"    column="process_type"    />
+        <result property="approver"    column="approver"    />
+        <result property="approvalStatus"    column="approval_status"    />
+        <result property="approvalTime"    column="approval_time"    />
+        <result property="approvalRemark"    column="approval_remark"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="remark"    column="remark"    />
+    </resultMap>
+
+    <sql id="selectStudentProcessApprovalVo">
+        select approval_id, student_id, process_type, approver, approval_status, approval_time, approval_remark, create_by, create_time, update_by, update_time, remark from student_process_approval
+    </sql>
+
+    <select id="selectStudentProcessApprovalList" parameterType="StudentProcessApproval" resultMap="StudentProcessApprovalResult">
+        <include refid="selectStudentProcessApprovalVo"/>
+        <where>  
+            <if test="processType != null  and processType != ''"> and process_type = #{processType}</if>
+            <if test="approver != null  and approver != ''"> and approver like concat('%', #{approver}, '%')</if>
+            <if test="approvalStatus != null  and approvalStatus != ''"> and approval_status = #{approvalStatus}</if>
+            <if test="approvalTime != null "> and approval_time = #{approvalTime}</if>
+            <if test="approvalRemark != null  and approvalRemark != ''"> and approval_remark like concat('%', #{approvalRemark}, '%')</if>
+        </where>
+    </select>
+    
+    <select id="selectStudentProcessApprovalByApprovalId" parameterType="Long" resultMap="StudentProcessApprovalResult">
+        <include refid="selectStudentProcessApprovalVo"/>
+        where approval_id = #{approvalId}
+    </select>
+
+    <insert id="insertStudentProcessApproval" parameterType="StudentProcessApproval" useGeneratedKeys="true" keyProperty="approvalId">
+        insert into student_process_approval
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="studentId != null">student_id,</if>
+            <if test="processType != null and processType != ''">process_type,</if>
+            <if test="approver != null and approver != ''">approver,</if>
+            <if test="approvalStatus != null and approvalStatus != ''">approval_status,</if>
+            <if test="approvalTime != null">approval_time,</if>
+            <if test="approvalRemark != null">approval_remark,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="remark != null">remark,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="studentId != null">#{studentId},</if>
+            <if test="processType != null and processType != ''">#{processType},</if>
+            <if test="approver != null and approver != ''">#{approver},</if>
+            <if test="approvalStatus != null and approvalStatus != ''">#{approvalStatus},</if>
+            <if test="approvalTime != null">#{approvalTime},</if>
+            <if test="approvalRemark != null">#{approvalRemark},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remark != null">#{remark},</if>
+         </trim>
+    </insert>
+
+    <update id="updateStudentProcessApproval" parameterType="StudentProcessApproval">
+        update student_process_approval
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="studentId != null">student_id = #{studentId},</if>
+            <if test="processType != null and processType != ''">process_type = #{processType},</if>
+            <if test="approver != null and approver != ''">approver = #{approver},</if>
+            <if test="approvalStatus != null and approvalStatus != ''">approval_status = #{approvalStatus},</if>
+            <if test="approvalTime != null">approval_time = #{approvalTime},</if>
+            <if test="approvalRemark != null">approval_remark = #{approvalRemark},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="remark != null">remark = #{remark},</if>
+        </trim>
+        where approval_id = #{approvalId}
+    </update>
+
+    <delete id="deleteStudentProcessApprovalByApprovalId" parameterType="Long">
+        delete from student_process_approval where approval_id = #{approvalId}
+    </delete>
+
+    <delete id="deleteStudentProcessApprovalByApprovalIds" parameterType="String">
+        delete from student_process_approval where approval_id in 
+        <foreach item="approvalId" collection="array" open="(" separator="," close=")">
+            #{approvalId}
+        </foreach>
+    </delete>
+</mapper>

@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.StudentStatusMapper">
+    
+    <resultMap type="StudentStatus" id="StudentStatusResult">
+        <result property="statusId"    column="status_id"    />
+        <result property="studentId"    column="student_id"    />
+        <result property="statusType"    column="status_type"    />
+        <result property="statusStartDate"    column="status_start_date"    />
+        <result property="statusEndDate"    column="status_end_date"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="remark"    column="remark"    />
+    </resultMap>
+
+    <sql id="selectStudentStatusVo">
+        select status_id, student_id, status_type, status_start_date, status_end_date, create_by, create_time, update_by, update_time, remark from student_status
+    </sql>
+
+    <select id="selectStudentStatusList" parameterType="StudentStatus" resultMap="StudentStatusResult">
+        <include refid="selectStudentStatusVo"/>
+        <where>  
+            <if test="statusType != null  and statusType != ''"> and status_type = #{statusType}</if>
+            <if test="params.beginStatusStartDate != null and params.beginStatusStartDate != '' and params.endStatusStartDate != null and params.endStatusStartDate != ''"> and status_start_date between #{params.beginStatusStartDate} and #{params.endStatusStartDate}</if>
+            <if test="params.beginStatusEndDate != null and params.beginStatusEndDate != '' and params.endStatusEndDate != null and params.endStatusEndDate != ''"> and status_end_date between #{params.beginStatusEndDate} and #{params.endStatusEndDate}</if>
+        </where>
+    </select>
+    
+    <select id="selectStudentStatusByStatusId" parameterType="Long" resultMap="StudentStatusResult">
+        <include refid="selectStudentStatusVo"/>
+        where status_id = #{statusId}
+    </select>
+
+    <insert id="insertStudentStatus" parameterType="StudentStatus" useGeneratedKeys="true" keyProperty="statusId">
+        insert into student_status
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="studentId != null">student_id,</if>
+            <if test="statusType != null">status_type,</if>
+            <if test="statusStartDate != null">status_start_date,</if>
+            <if test="statusEndDate != null">status_end_date,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="remark != null">remark,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="studentId != null">#{studentId},</if>
+            <if test="statusType != null">#{statusType},</if>
+            <if test="statusStartDate != null">#{statusStartDate},</if>
+            <if test="statusEndDate != null">#{statusEndDate},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remark != null">#{remark},</if>
+         </trim>
+    </insert>
+
+    <update id="updateStudentStatus" parameterType="StudentStatus">
+        update student_status
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="studentId != null">student_id = #{studentId},</if>
+            <if test="statusType != null">status_type = #{statusType},</if>
+            <if test="statusStartDate != null">status_start_date = #{statusStartDate},</if>
+            <if test="statusEndDate != null">status_end_date = #{statusEndDate},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="remark != null">remark = #{remark},</if>
+        </trim>
+        where status_id = #{statusId}
+    </update>
+
+    <delete id="deleteStudentStatusByStatusId" parameterType="Long">
+        delete from student_status where status_id = #{statusId}
+    </delete>
+
+    <delete id="deleteStudentStatusByStatusIds" parameterType="String">
+        delete from student_status where status_id in 
+        <foreach item="statusId" collection="array" open="(" separator="," close=")">
+            #{statusId}
+        </foreach>
+    </delete>
+</mapper>

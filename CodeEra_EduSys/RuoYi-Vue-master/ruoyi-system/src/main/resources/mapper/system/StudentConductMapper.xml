@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.StudentConductMapper">
+    
+    <resultMap type="StudentConduct" id="StudentConductResult">
+        <result property="conductId"    column="conduct_id"    />
+        <result property="studentId"    column="student_id"    />
+        <result property="conductScore"    column="conduct_score"    />
+        <result property="conductChangeReason"    column="conduct_change_reason"    />
+        <result property="recordDate"    column="record_date"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="remark"    column="remark"    />
+    </resultMap>
+
+    <sql id="selectStudentConductVo">
+        select conduct_id, student_id, conduct_score, conduct_change_reason, record_date, create_by, create_time, update_by, update_time, remark from student_conduct
+    </sql>
+
+    <select id="selectStudentConductList" parameterType="StudentConduct" resultMap="StudentConductResult">
+        <include refid="selectStudentConductVo"/>
+        <where>  
+            <if test="conductScore != null "> and conduct_score = #{conductScore}</if>
+            <if test="conductChangeReason != null  and conductChangeReason != ''"> and conduct_change_reason like concat('%', #{conductChangeReason}, '%')</if>
+            <if test="recordDate != null "> and record_date = #{recordDate}</if>
+        </where>
+    </select>
+    
+    <select id="selectStudentConductByConductId" parameterType="Long" resultMap="StudentConductResult">
+        <include refid="selectStudentConductVo"/>
+        where conduct_id = #{conductId}
+    </select>
+
+    <insert id="insertStudentConduct" parameterType="StudentConduct" useGeneratedKeys="true" keyProperty="conductId">
+        insert into student_conduct
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="studentId != null">student_id,</if>
+            <if test="conductScore != null">conduct_score,</if>
+            <if test="conductChangeReason != null">conduct_change_reason,</if>
+            <if test="recordDate != null">record_date,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="remark != null">remark,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="studentId != null">#{studentId},</if>
+            <if test="conductScore != null">#{conductScore},</if>
+            <if test="conductChangeReason != null">#{conductChangeReason},</if>
+            <if test="recordDate != null">#{recordDate},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remark != null">#{remark},</if>
+         </trim>
+    </insert>
+
+    <update id="updateStudentConduct" parameterType="StudentConduct">
+        update student_conduct
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="studentId != null">student_id = #{studentId},</if>
+            <if test="conductScore != null">conduct_score = #{conductScore},</if>
+            <if test="conductChangeReason != null">conduct_change_reason = #{conductChangeReason},</if>
+            <if test="recordDate != null">record_date = #{recordDate},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="remark != null">remark = #{remark},</if>
+        </trim>
+        where conduct_id = #{conductId}
+    </update>
+
+    <delete id="deleteStudentConductByConductId" parameterType="Long">
+        delete from student_conduct where conduct_id = #{conductId}
+    </delete>
+
+    <delete id="deleteStudentConductByConductIds" parameterType="String">
+        delete from student_conduct where conduct_id in 
+        <foreach item="conductId" collection="array" open="(" separator="," close=")">
+            #{conductId}
+        </foreach>
+    </delete>
+</mapper>

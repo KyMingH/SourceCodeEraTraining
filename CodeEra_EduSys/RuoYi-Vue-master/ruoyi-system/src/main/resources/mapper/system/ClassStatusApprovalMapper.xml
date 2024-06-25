@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.ClassStatusApprovalMapper">
+    
+    <resultMap type="ClassStatusApproval" id="ClassStatusApprovalResult">
+        <result property="approvalId"    column="approval_id"    />
+        <result property="classId"    column="class_id"    />
+        <result property="approverContent"    column="approver_content"    />
+        <result property="approver"    column="approver"    />
+        <result property="approvalStatus"    column="approval_status"    />
+        <result property="approvalTime"    column="approval_time"    />
+        <result property="approvalRemark"    column="approval_remark"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="remark"    column="remark"    />
+    </resultMap>
+
+    <sql id="selectClassStatusApprovalVo">
+        select approval_id, class_id, approver_content, approver, approval_status, approval_time, approval_remark, create_by, create_time, update_by, update_time, remark from class_status_approval
+    </sql>
+
+    <select id="selectClassStatusApprovalList" parameterType="ClassStatusApproval" resultMap="ClassStatusApprovalResult">
+        <include refid="selectClassStatusApprovalVo"/>
+        <where>  
+            <if test="approverContent != null  and approverContent != ''"> and approver_content like concat('%', #{approverContent}, '%')</if>
+            <if test="approver != null  and approver != ''"> and approver like concat('%', #{approver}, '%')</if>
+            <if test="approvalStatus != null  and approvalStatus != ''"> and approval_status = #{approvalStatus}</if>
+            <if test="approvalTime != null "> and approval_time = #{approvalTime}</if>
+            <if test="approvalRemark != null  and approvalRemark != ''"> and approval_remark like concat('%', #{approvalRemark}, '%')</if>
+        </where>
+    </select>
+    
+    <select id="selectClassStatusApprovalByApprovalId" parameterType="Long" resultMap="ClassStatusApprovalResult">
+        <include refid="selectClassStatusApprovalVo"/>
+        where approval_id = #{approvalId}
+    </select>
+
+    <insert id="insertClassStatusApproval" parameterType="ClassStatusApproval" useGeneratedKeys="true" keyProperty="approvalId">
+        insert into class_status_approval
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="classId != null">class_id,</if>
+            <if test="approverContent != null and approverContent != ''">approver_content,</if>
+            <if test="approver != null and approver != ''">approver,</if>
+            <if test="approvalStatus != null and approvalStatus != ''">approval_status,</if>
+            <if test="approvalTime != null">approval_time,</if>
+            <if test="approvalRemark != null">approval_remark,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="remark != null">remark,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="classId != null">#{classId},</if>
+            <if test="approverContent != null and approverContent != ''">#{approverContent},</if>
+            <if test="approver != null and approver != ''">#{approver},</if>
+            <if test="approvalStatus != null and approvalStatus != ''">#{approvalStatus},</if>
+            <if test="approvalTime != null">#{approvalTime},</if>
+            <if test="approvalRemark != null">#{approvalRemark},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remark != null">#{remark},</if>
+         </trim>
+    </insert>
+
+    <update id="updateClassStatusApproval" parameterType="ClassStatusApproval">
+        update class_status_approval
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="classId != null">class_id = #{classId},</if>
+            <if test="approverContent != null and approverContent != ''">approver_content = #{approverContent},</if>
+            <if test="approver != null and approver != ''">approver = #{approver},</if>
+            <if test="approvalStatus != null and approvalStatus != ''">approval_status = #{approvalStatus},</if>
+            <if test="approvalTime != null">approval_time = #{approvalTime},</if>
+            <if test="approvalRemark != null">approval_remark = #{approvalRemark},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="remark != null">remark = #{remark},</if>
+        </trim>
+        where approval_id = #{approvalId}
+    </update>
+
+    <delete id="deleteClassStatusApprovalByApprovalId" parameterType="Long">
+        delete from class_status_approval where approval_id = #{approvalId}
+    </delete>
+
+    <delete id="deleteClassStatusApprovalByApprovalIds" parameterType="String">
+        delete from class_status_approval where approval_id in 
+        <foreach item="approvalId" collection="array" open="(" separator="," close=")">
+            #{approvalId}
+        </foreach>
+    </delete>
+</mapper>

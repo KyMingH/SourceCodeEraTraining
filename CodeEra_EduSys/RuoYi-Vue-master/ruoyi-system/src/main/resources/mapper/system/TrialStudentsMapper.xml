@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.TrialStudentsMapper">
+    
+    <resultMap type="TrialStudents" id="TrialStudentsResult">
+        <result property="trialStudentId"    column="trial_student_id"    />
+        <result property="studentId"    column="student_id"    />
+        <result property="trialCourse"    column="trial_course"    />
+        <result property="trialDate"    column="trial_date"    />
+        <result property="conversionStatus"    column="conversion_status"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="remark"    column="remark"    />
+    </resultMap>
+
+    <sql id="selectTrialStudentsVo">
+        select trial_student_id, student_id, trial_course, trial_date, conversion_status, create_by, create_time, update_by, update_time, remark from trial_students
+    </sql>
+
+    <select id="selectTrialStudentsList" parameterType="TrialStudents" resultMap="TrialStudentsResult">
+        <include refid="selectTrialStudentsVo"/>
+        <where>  
+            <if test="trialCourse != null  and trialCourse != ''"> and trial_course like concat('%', #{trialCourse}, '%')</if>
+            <if test="params.beginTrialDate != null and params.beginTrialDate != '' and params.endTrialDate != null and params.endTrialDate != ''"> and trial_date between #{params.beginTrialDate} and #{params.endTrialDate}</if>
+            <if test="conversionStatus != null "> and conversion_status = #{conversionStatus}</if>
+        </where>
+    </select>
+    
+    <select id="selectTrialStudentsByTrialStudentId" parameterType="Long" resultMap="TrialStudentsResult">
+        <include refid="selectTrialStudentsVo"/>
+        where trial_student_id = #{trialStudentId}
+    </select>
+
+    <insert id="insertTrialStudents" parameterType="TrialStudents" useGeneratedKeys="true" keyProperty="trialStudentId">
+        insert into trial_students
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="studentId != null">student_id,</if>
+            <if test="trialCourse != null">trial_course,</if>
+            <if test="trialDate != null">trial_date,</if>
+            <if test="conversionStatus != null">conversion_status,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="remark != null">remark,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="studentId != null">#{studentId},</if>
+            <if test="trialCourse != null">#{trialCourse},</if>
+            <if test="trialDate != null">#{trialDate},</if>
+            <if test="conversionStatus != null">#{conversionStatus},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remark != null">#{remark},</if>
+         </trim>
+    </insert>
+
+    <update id="updateTrialStudents" parameterType="TrialStudents">
+        update trial_students
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="studentId != null">student_id = #{studentId},</if>
+            <if test="trialCourse != null">trial_course = #{trialCourse},</if>
+            <if test="trialDate != null">trial_date = #{trialDate},</if>
+            <if test="conversionStatus != null">conversion_status = #{conversionStatus},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="remark != null">remark = #{remark},</if>
+        </trim>
+        where trial_student_id = #{trialStudentId}
+    </update>
+
+    <delete id="deleteTrialStudentsByTrialStudentId" parameterType="Long">
+        delete from trial_students where trial_student_id = #{trialStudentId}
+    </delete>
+
+    <delete id="deleteTrialStudentsByTrialStudentIds" parameterType="String">
+        delete from trial_students where trial_student_id in 
+        <foreach item="trialStudentId" collection="array" open="(" separator="," close=")">
+            #{trialStudentId}
+        </foreach>
+    </delete>
+</mapper>

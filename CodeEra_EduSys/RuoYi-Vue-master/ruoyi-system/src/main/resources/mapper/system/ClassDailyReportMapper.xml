@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.ClassDailyReportMapper">
+    
+    <resultMap type="ClassDailyReport" id="ClassDailyReportResult">
+        <result property="reportId"    column="report_id"    />
+        <result property="classId"    column="class_id"    />
+        <result property="date"    column="date"    />
+        <result property="reportContent"    column="report_content"    />
+        <result property="submitter"    column="submitter"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="remark"    column="remark"    />
+    </resultMap>
+
+    <sql id="selectClassDailyReportVo">
+        select report_id, class_id, date, report_content, submitter, create_by, create_time, update_by, update_time, remark from class_daily_report
+    </sql>
+
+    <select id="selectClassDailyReportList" parameterType="ClassDailyReport" resultMap="ClassDailyReportResult">
+        <include refid="selectClassDailyReportVo"/>
+        <where>  
+            <if test="date != null "> and date = #{date}</if>
+            <if test="reportContent != null  and reportContent != ''"> and report_content like concat('%', #{reportContent}, '%')</if>
+            <if test="submitter != null  and submitter != ''"> and submitter like concat('%', #{submitter}, '%')</if>
+        </where>
+    </select>
+    
+    <select id="selectClassDailyReportByReportId" parameterType="Long" resultMap="ClassDailyReportResult">
+        <include refid="selectClassDailyReportVo"/>
+        where report_id = #{reportId}
+    </select>
+
+    <insert id="insertClassDailyReport" parameterType="ClassDailyReport" useGeneratedKeys="true" keyProperty="reportId">
+        insert into class_daily_report
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="classId != null">class_id,</if>
+            <if test="date != null">date,</if>
+            <if test="reportContent != null">report_content,</if>
+            <if test="submitter != null">submitter,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="remark != null">remark,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="classId != null">#{classId},</if>
+            <if test="date != null">#{date},</if>
+            <if test="reportContent != null">#{reportContent},</if>
+            <if test="submitter != null">#{submitter},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remark != null">#{remark},</if>
+         </trim>
+    </insert>
+
+    <update id="updateClassDailyReport" parameterType="ClassDailyReport">
+        update class_daily_report
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="classId != null">class_id = #{classId},</if>
+            <if test="date != null">date = #{date},</if>
+            <if test="reportContent != null">report_content = #{reportContent},</if>
+            <if test="submitter != null">submitter = #{submitter},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="remark != null">remark = #{remark},</if>
+        </trim>
+        where report_id = #{reportId}
+    </update>
+
+    <delete id="deleteClassDailyReportByReportId" parameterType="Long">
+        delete from class_daily_report where report_id = #{reportId}
+    </delete>
+
+    <delete id="deleteClassDailyReportByReportIds" parameterType="String">
+        delete from class_daily_report where report_id in 
+        <foreach item="reportId" collection="array" open="(" separator="," close=")">
+            #{reportId}
+        </foreach>
+    </delete>
+</mapper>

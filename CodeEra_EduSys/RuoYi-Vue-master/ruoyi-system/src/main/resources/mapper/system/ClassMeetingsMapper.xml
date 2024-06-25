@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.ClassMeetingsMapper">
+    
+    <resultMap type="ClassMeetings" id="ClassMeetingsResult">
+        <result property="meetingId"    column="meeting_id"    />
+        <result property="classId"    column="class_id"    />
+        <result property="meetingType"    column="meeting_type"    />
+        <result property="meetingDate"    column="meeting_date"    />
+        <result property="meetingContent"    column="meeting_content"    />
+        <result property="meetingOutcome"    column="meeting_outcome"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="remark"    column="remark"    />
+    </resultMap>
+
+    <sql id="selectClassMeetingsVo">
+        select meeting_id, class_id, meeting_type, meeting_date, meeting_content, meeting_outcome, create_by, create_time, update_by, update_time, remark from class_meetings
+    </sql>
+
+    <select id="selectClassMeetingsList" parameterType="ClassMeetings" resultMap="ClassMeetingsResult">
+        <include refid="selectClassMeetingsVo"/>
+        <where>  
+            <if test="meetingType != null  and meetingType != ''"> and meeting_type = #{meetingType}</if>
+            <if test="params.beginMeetingDate != null and params.beginMeetingDate != '' and params.endMeetingDate != null and params.endMeetingDate != ''"> and meeting_date between #{params.beginMeetingDate} and #{params.endMeetingDate}</if>
+            <if test="params.beginMeetingContent != null and params.beginMeetingContent != '' and params.endMeetingContent != null and params.endMeetingContent != ''"> and meeting_content between #{params.beginMeetingContent} and #{params.endMeetingContent}</if>
+            <if test="params.beginMeetingOutcome != null and params.beginMeetingOutcome != '' and params.endMeetingOutcome != null and params.endMeetingOutcome != ''"> and meeting_outcome between #{params.beginMeetingOutcome} and #{params.endMeetingOutcome}</if>
+        </where>
+    </select>
+    
+    <select id="selectClassMeetingsByMeetingId" parameterType="Long" resultMap="ClassMeetingsResult">
+        <include refid="selectClassMeetingsVo"/>
+        where meeting_id = #{meetingId}
+    </select>
+
+    <insert id="insertClassMeetings" parameterType="ClassMeetings" useGeneratedKeys="true" keyProperty="meetingId">
+        insert into class_meetings
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="classId != null">class_id,</if>
+            <if test="meetingType != null">meeting_type,</if>
+            <if test="meetingDate != null">meeting_date,</if>
+            <if test="meetingContent != null">meeting_content,</if>
+            <if test="meetingOutcome != null">meeting_outcome,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="remark != null">remark,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="classId != null">#{classId},</if>
+            <if test="meetingType != null">#{meetingType},</if>
+            <if test="meetingDate != null">#{meetingDate},</if>
+            <if test="meetingContent != null">#{meetingContent},</if>
+            <if test="meetingOutcome != null">#{meetingOutcome},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remark != null">#{remark},</if>
+         </trim>
+    </insert>
+
+    <update id="updateClassMeetings" parameterType="ClassMeetings">
+        update class_meetings
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="classId != null">class_id = #{classId},</if>
+            <if test="meetingType != null">meeting_type = #{meetingType},</if>
+            <if test="meetingDate != null">meeting_date = #{meetingDate},</if>
+            <if test="meetingContent != null">meeting_content = #{meetingContent},</if>
+            <if test="meetingOutcome != null">meeting_outcome = #{meetingOutcome},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="remark != null">remark = #{remark},</if>
+        </trim>
+        where meeting_id = #{meetingId}
+    </update>
+
+    <delete id="deleteClassMeetingsByMeetingId" parameterType="Long">
+        delete from class_meetings where meeting_id = #{meetingId}
+    </delete>
+
+    <delete id="deleteClassMeetingsByMeetingIds" parameterType="String">
+        delete from class_meetings where meeting_id in 
+        <foreach item="meetingId" collection="array" open="(" separator="," close=")">
+            #{meetingId}
+        </foreach>
+    </delete>
+</mapper>

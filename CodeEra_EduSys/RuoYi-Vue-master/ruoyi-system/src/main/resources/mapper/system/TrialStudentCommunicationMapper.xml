@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.TrialStudentCommunicationMapper">
+    
+    <resultMap type="TrialStudentCommunication" id="TrialStudentCommunicationResult">
+        <result property="communicationId"    column="communication_id"    />
+        <result property="trialStudentId"    column="trial_student_id"    />
+        <result property="communicationDate"    column="communication_date"    />
+        <result property="communicationContent"    column="communication_content"    />
+        <result property="followUpActions"    column="follow_up_actions"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="remark"    column="remark"    />
+    </resultMap>
+
+    <sql id="selectTrialStudentCommunicationVo">
+        select communication_id, trial_student_id, communication_date, communication_content, follow_up_actions, create_by, create_time, update_by, update_time, remark from trial_student_communication
+    </sql>
+
+    <select id="selectTrialStudentCommunicationList" parameterType="TrialStudentCommunication" resultMap="TrialStudentCommunicationResult">
+        <include refid="selectTrialStudentCommunicationVo"/>
+        <where>  
+            <if test="params.beginCommunicationDate != null and params.beginCommunicationDate != '' and params.endCommunicationDate != null and params.endCommunicationDate != ''"> and communication_date between #{params.beginCommunicationDate} and #{params.endCommunicationDate}</if>
+            <if test="communicationContent != null  and communicationContent != ''"> and communication_content like concat('%', #{communicationContent}, '%')</if>
+            <if test="followUpActions != null  and followUpActions != ''"> and follow_up_actions like concat('%', #{followUpActions}, '%')</if>
+        </where>
+    </select>
+    
+    <select id="selectTrialStudentCommunicationByCommunicationId" parameterType="Long" resultMap="TrialStudentCommunicationResult">
+        <include refid="selectTrialStudentCommunicationVo"/>
+        where communication_id = #{communicationId}
+    </select>
+
+    <insert id="insertTrialStudentCommunication" parameterType="TrialStudentCommunication" useGeneratedKeys="true" keyProperty="communicationId">
+        insert into trial_student_communication
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="trialStudentId != null">trial_student_id,</if>
+            <if test="communicationDate != null">communication_date,</if>
+            <if test="communicationContent != null">communication_content,</if>
+            <if test="followUpActions != null">follow_up_actions,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="remark != null">remark,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="trialStudentId != null">#{trialStudentId},</if>
+            <if test="communicationDate != null">#{communicationDate},</if>
+            <if test="communicationContent != null">#{communicationContent},</if>
+            <if test="followUpActions != null">#{followUpActions},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remark != null">#{remark},</if>
+         </trim>
+    </insert>
+
+    <update id="updateTrialStudentCommunication" parameterType="TrialStudentCommunication">
+        update trial_student_communication
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="trialStudentId != null">trial_student_id = #{trialStudentId},</if>
+            <if test="communicationDate != null">communication_date = #{communicationDate},</if>
+            <if test="communicationContent != null">communication_content = #{communicationContent},</if>
+            <if test="followUpActions != null">follow_up_actions = #{followUpActions},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="remark != null">remark = #{remark},</if>
+        </trim>
+        where communication_id = #{communicationId}
+    </update>
+
+    <delete id="deleteTrialStudentCommunicationByCommunicationId" parameterType="Long">
+        delete from trial_student_communication where communication_id = #{communicationId}
+    </delete>
+
+    <delete id="deleteTrialStudentCommunicationByCommunicationIds" parameterType="String">
+        delete from trial_student_communication where communication_id in 
+        <foreach item="communicationId" collection="array" open="(" separator="," close=")">
+            #{communicationId}
+        </foreach>
+    </delete>
+</mapper>
